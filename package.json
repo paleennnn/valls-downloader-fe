@@ -1,0 +1,27 @@
+{
+  "name": "valls-downloader-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@iconify/vue": "^5.0.0",
+    "axios": "^1.6.2",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.4.1",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.53.0",
+    "eslint-plugin-vue": "^9.18.1",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.6",
+    "vite": "^5.0.2"
+  }
+}
