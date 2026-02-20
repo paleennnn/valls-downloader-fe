@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE = 'http://localhost:8080/api'
+const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api`
 
 export function useDownload() {
   const download = async (url, format = 'mp4', quality = 'best') => {
@@ -59,7 +59,8 @@ export function useDownload() {
     if (!thumbnail) return ''
     // Jika thumbnail dari Instagram/Facebook, route lewat proxy BE untuk bypass CORS
     if (thumbnail.includes('instagram') || thumbnail.includes('cdninstagram') || thumbnail.includes('fbcdn')) {
-      return `${API_BASE}/proxy-thumbnail?url=${encodeURIComponent(thumbnail)}`
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+      return `${baseUrl}/api/proxy-thumbnail?url=${encodeURIComponent(thumbnail)}`
     }
     return thumbnail
   }
