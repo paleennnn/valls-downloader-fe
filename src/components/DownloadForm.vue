@@ -26,16 +26,22 @@
       >
         <span v-if="isLoading" class="animate-spin">⏳</span>
         <span v-else>ℹ️</span>
-        {{ isLoading ? 'Loading...' : 'Get Video Info' }}
+        {{ isLoading ? "Loading..." : "Get Video Info" }}
       </button>
     </div>
 
     <!-- Video Info Section (shown after getVideoInfo) -->
-    <div v-if="videoInfo" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+    <div
+      v-if="videoInfo"
+      class="bg-gray-800 rounded-lg p-6 border border-gray-700"
+    >
       <!-- Thumbnail & Title -->
       <div class="mb-6">
         <div class="flex gap-4">
-          <div v-if="videoInfo.thumbnail" class="w-32 h-24 rounded overflow-hidden flex-shrink-0">
+          <div
+            v-if="videoInfo.thumbnail"
+            class="w-32 h-24 rounded overflow-hidden flex-shrink-0"
+          >
             <img
               :src="getThumbnailUrl(videoInfo.thumbnail)"
               :alt="videoInfo.title"
@@ -43,14 +49,19 @@
               @error="onThumbnailError"
             />
           </div>
-          <div v-else class="w-32 h-24 rounded bg-gray-700 flex items-center justify-center flex-shrink-0">
+          <div
+            v-else
+            class="w-32 h-24 rounded bg-gray-700 flex items-center justify-center flex-shrink-0"
+          >
             <div class="text-gray-400 text-center text-xs">
               <div>📹</div>
               <div>No Preview</div>
             </div>
           </div>
           <div class="flex-1">
-            <h3 class="text-white font-bold text-lg mb-2">{{ videoInfo.title }}</h3>
+            <h3 class="text-white font-bold text-lg mb-2">
+              {{ videoInfo.title }}
+            </h3>
             <p class="text-gray-400 text-sm">
               ⏱️ Duration: {{ formatDuration(videoInfo.duration) }}
             </p>
@@ -88,7 +99,10 @@
       </div>
 
       <!-- Quality Selector (dynamic from API) -->
-      <div class="mb-6" v-if="format === 'mp4' && availableQualities.length > 0">
+      <div
+        class="mb-6"
+        v-if="format === 'mp4' && availableQualities.length > 0"
+      >
         <p class="text-gray-400 text-sm mb-3">Pilih Kualitas:</p>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
           <button
@@ -115,21 +129,30 @@
       >
         <span v-if="isLoading" class="animate-spin">⏳</span>
         <span v-else>📥</span>
-        {{ isLoading ? 'Downloading...' : 'Download Video' }}
+        {{ isLoading ? "Downloading..." : "Download Video" }}
       </button>
     </div>
 
     <!-- Status Messages -->
-    <div v-if="successMessage" class="bg-green-900/30 border border-green-700 rounded-lg p-4">
+    <div
+      v-if="successMessage"
+      class="bg-green-900/30 border border-green-700 rounded-lg p-4"
+    >
       <p class="text-green-300">✓ {{ successMessage }}</p>
     </div>
 
-    <div v-if="errorMessage" class="bg-red-900/30 border border-red-700 rounded-lg p-4">
+    <div
+      v-if="errorMessage"
+      class="bg-red-900/30 border border-red-700 rounded-lg p-4"
+    >
       <p class="text-red-300">✗ {{ errorMessage }}</p>
     </div>
 
     <!-- Progress Bar -->
-    <div v-if="progress > 0 && progress < 100" class="bg-gray-800 rounded-lg p-4">
+    <div
+      v-if="progress > 0 && progress < 100"
+      class="bg-gray-800 rounded-lg p-4"
+    >
       <div class="flex justify-between mb-2">
         <p class="text-gray-400 text-sm">Processing...</p>
         <p class="text-gray-400 text-sm">{{ Math.round(progress) }}%</p>
@@ -137,7 +160,7 @@
       <div class="w-full bg-gray-700 rounded-full h-2">
         <div
           class="bg-primary h-2 rounded-full transition-all duration-300"
-          :style="{ width: progress + '%' }"
+          :style="{ width: Math.round(progress) + '%' }"
         ></div>
       </div>
     </div>
@@ -150,123 +173,127 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useDownload } from '@/composables/useDownload'
+import { ref, computed } from "vue";
+import { useDownload } from "@/composables/useDownload";
 
-const url = ref('')
-const format = ref('mp4')
-const quality = ref('best')
-const isLoading = ref(false)
-const progress = ref(0)
-const successMessage = ref('')
-const errorMessage = ref('')
-const videoInfo = ref(null)
+const url = ref("");
+const format = ref("mp4");
+const quality = ref("best");
+const isLoading = ref(false);
+const progress = ref(0);
+const successMessage = ref("");
+const errorMessage = ref("");
+const videoInfo = ref(null);
 
-const { download, getVideoInfo: getVideoInfoApi, getThumbnailUrl } = useDownload()
+const {
+  download,
+  getVideoInfo: getVideoInfoApi,
+  getThumbnailUrl,
+} = useDownload();
 
 const availableQualities = computed(() => {
-  if (!videoInfo.value || !videoInfo.value.available_formats) return []
+  if (!videoInfo.value || !videoInfo.value.available_formats) return [];
   return videoInfo.value.available_formats
-    .filter(f => f.format === format.value)
-    .map(f => f.quality)
+    .filter((f) => f.format === format.value)
+    .map((f) => f.quality)
     .sort((a, b) => {
-      const order = { best: 0, '1080p': 1, '720p': 2, '480p': 3 }
-      return (order[a] ?? 999) - (order[b] ?? 999)
-    })
-})
+      const order = { best: 0, "1080p": 1, "720p": 2, "480p": 3 };
+      return (order[a] ?? 999) - (order[b] ?? 999);
+    });
+});
 
 const formatDuration = (seconds) => {
-  if (!seconds) return 'N/A'
-  const hours = Math.floor(seconds / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  const secs = seconds % 60
-  
+  if (!seconds) return "N/A";
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
   if (hours > 0) {
-    return `${hours}h ${minutes}m ${secs}s`
+    return `${hours}h ${minutes}m ${secs}s`;
   }
-  return `${minutes}m ${secs}s`
-}
+  return `${minutes}m ${secs}s`;
+};
 
 const onThumbnailError = () => {
   // If thumbnail image fails to load, clear it to show placeholder
   if (videoInfo.value) {
-    videoInfo.value.thumbnail = ''
+    videoInfo.value.thumbnail = "";
   }
-}
+};
 
 const pasteFromClipboard = async () => {
   try {
-    const text = await navigator.clipboard.readText()
-    url.value = text
-    await getVideoInfo()
+    const text = await navigator.clipboard.readText();
+    url.value = text;
+    await getVideoInfo();
   } catch (e) {
-    errorMessage.value = 'Tidak bisa akses clipboard. Manual paste saja.'
+    errorMessage.value = "Tidak bisa akses clipboard. Manual paste saja.";
   }
-}
+};
 
 const getVideoInfo = async () => {
   if (!url.value) {
-    errorMessage.value = 'Masukan URL video terlebih dahulu'
-    return
+    errorMessage.value = "Masukan URL video terlebih dahulu";
+    return;
   }
 
   try {
-    isLoading.value = true
-    errorMessage.value = ''
-    successMessage.value = ''
+    isLoading.value = true;
+    errorMessage.value = "";
+    successMessage.value = "";
 
-    const info = await getVideoInfoApi(url.value)
-    videoInfo.value = info
-    quality.value = availableQualities.value[0] || 'best'
+    const info = await getVideoInfoApi(url.value);
+    videoInfo.value = info;
+    quality.value = availableQualities.value[0] || "best";
   } catch (e) {
-    errorMessage.value = e.message || 'Gagal mengambil informasi video'
-    videoInfo.value = null
+    errorMessage.value = e.message || "Gagal mengambil informasi video";
+    videoInfo.value = null;
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const downloadVideo = async () => {
   if (!url.value) {
-    errorMessage.value = 'Masukan URL video terlebih dahulu'
-    return
+    errorMessage.value = "Masukan URL video terlebih dahulu";
+    return;
   }
 
   try {
-    isLoading.value = true
-    errorMessage.value = ''
-    successMessage.value = ''
-    progress.value = 10
+    isLoading.value = true;
+    errorMessage.value = "";
+    successMessage.value = "";
+    progress.value = 10;
 
     // Simulate progress
     const progressInterval = setInterval(() => {
       if (progress.value < 90) {
-        progress.value += Math.random() * 30
+        progress.value += Math.random() * 30;
       }
-    }, 500)
+    }, 500);
 
-    const result = await download(url.value, format.value, quality.value)
+    const result = await download(url.value, format.value, quality.value);
 
-    clearInterval(progressInterval)
-    progress.value = 100
+    clearInterval(progressInterval);
+    progress.value = 100;
 
     // Create download link
-    const link = document.createElement('a')
-    link.href = result.file_url
-    link.download = result.file_name
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    const link = document.createElement("a");
+    link.href = result.file_url;
+    link.download = result.file_name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-    successMessage.value = `Video berhasil di-download! Format: ${result.format}`
+    successMessage.value = `Video berhasil di-download! Format: ${result.format}`;
 
     // Jangan reset form, biarkan user lihat hasil downloadnya
     // Form akan auto-reset ketika user input URL baru di input field
   } catch (e) {
-    errorMessage.value = e.message || 'Gagal download video. Coba lagi.'
-    progress.value = 0
+    errorMessage.value = e.message || "Gagal download video. Coba lagi.";
+    progress.value = 0;
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 </script>
