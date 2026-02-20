@@ -132,7 +132,7 @@
     <div v-if="progress > 0 && progress < 100" class="bg-gray-800 rounded-lg p-4">
       <div class="flex justify-between mb-2">
         <p class="text-gray-400 text-sm">Processing...</p>
-        <p class="text-gray-400 text-sm">{{ progress }}%</p>
+        <p class="text-gray-400 text-sm">{{ Math.round(progress) }}%</p>
       </div>
       <div class="w-full bg-gray-700 rounded-full h-2">
         <div
@@ -260,13 +260,8 @@ const downloadVideo = async () => {
 
     successMessage.value = `Video berhasil di-download! Format: ${result.format}`
 
-    // Reset after success
-    setTimeout(() => {
-      url.value = ''
-      progress.value = 0
-      videoInfo.value = null
-      successMessage.value = ''
-    }, 3000)
+    // Jangan reset form, biarkan user lihat hasil downloadnya
+    // Form akan auto-reset ketika user input URL baru di input field
   } catch (e) {
     errorMessage.value = e.message || 'Gagal download video. Coba lagi.'
     progress.value = 0
