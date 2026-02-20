@@ -27,3 +27,6 @@ coverage
 .env
 .env.local
 .env.*.local
+
+# md
+DEPLOYMENT.md

@@ -82,17 +82,41 @@
    
    **Copy URL ini** (contoh: `https://abcd-1234-efgh-5678.ngrok.io`)
 
-4. **Update Vercel Environment Variable**
+4. **Update Backend BASE_URL (.env)**
+   ⚠️ **IMPORTANT STEP!**
+   
+   Edit file `d:\valls-downloader-be\.env`:
+   ```env
+   # Change this line:
+   BASE_URL=http://localhost:8080
+   
+   # To your ngrok URL:
+   BASE_URL=https://abcd-1234-efgh-5678.ngrok.io
+   ```
+   
+   Ini memastikan file download URL yang dikirim FE adalah full ngrok URL, bukan localhost.
+
+5. **Restart Backend (Terminal 1)**
+   - Stop backend dengan `Ctrl+C`
+   - Jalankan lagi:
+     ```powershell
+     go run cmd/valls-downloader/main.go
+     ```
+
+6. **Update Vercel Environment Variable**
    - Buka https://vercel.com/dashboard
    - Select project `valls-downloader-fe`
    - Settings → Environment Variables
-   - Edit `VITE_API_URL` dengan ngrok URL
+   - Edit `VITE_API_URL` dengan ngrok URL yang sama:
+     ```
+     VITE_API_URL=https://abcd-1234-efgh-5678.ngrok.io
+     ```
    - Save & Redeploy
 
-5. **Test**
+7. **Test**
    - Buka FE di Vercel: `https://valls-downloader-fe-xxx.vercel.app`
    - Paste video URL dan download
-   - Seharusnya berhasil!
+   - Download seharusnya langsung ke device! ✅
 
 ---
 
